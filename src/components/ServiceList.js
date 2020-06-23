@@ -8,6 +8,14 @@ const pencilStyles = {
 
 function ServiceList() {
   const items = useSelector(state => state.serviceList);
+  const { filter } = useSelector(state => state.serviceFilter);
+  const filteredItems = filter && filter !== ''
+    ? items.filter((o) => 
+        o.name.toLowerCase().indexOf(filter) >= 0
+        || String(o.price).indexOf(filter) >= 0
+      )
+    : items;
+
   const dispatch = useDispatch();
 
   const handleRemove = (id) => {
@@ -24,7 +32,7 @@ function ServiceList() {
 
   return (
     <ul>
-      {items.map(o => (
+      {filteredItems.map(o => (
         <li key={o.id}>
           {o.name} {o.price}
           <button onClick={() => handleEdit(o)}><div style={pencilStyles}>✏</div></button>

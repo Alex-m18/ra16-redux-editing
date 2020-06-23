@@ -21,11 +21,17 @@ class ServiceListClassBased extends Component {
   }
 
   render() {
-    const {items} = this.props;
+    const { items, filter } = this.props;
+    const filteredItems = filter && filter !== ''
+    ? items.filter((o) => 
+        o.name.toLowerCase().indexOf(filter) >= 0
+        || String(o.price).indexOf(filter) >= 0
+      )
+    : items;
 
     return (
       <ul>
-        {items.map(o => (
+        {filteredItems.map(o => (
           <li key={o.id}>
             {o.name} {o.price}
             <button onClick={() => this.handleEdit(o)}>
@@ -44,17 +50,13 @@ ServiceListClassBased.propTypes = {
     name: PropTypes.string,
     price: PropTypes.number,
   })).isRequired,
+  filter: PropTypes.string,
 }
 
 const mapStateToProps = (state) => ({
   items: state.serviceList,
+  filter: state.serviceFilter.filter,
 });
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     removeService: id => dispatch(removeService(id))
-//   }
-// };
 
 const mapDispatchToProps = ({
   removeService,
